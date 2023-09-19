@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Megaminx Project</title>
+    <script>
+        // This is a list of all paths for the source of each component
+        const componentList = {
+            Green: './MegaAssets/Green/',
+            Yellow: './MegaAssets/Yellow/',
+            Red: './MegaAssets/Red/',
+            Blue: './MegaAssets/Blue/',
+            Purple: './MegaAssets/Purple/',
+            White: './MegaAssets/White/',
+            Cyan: './MegaAssets/Cyan/',
+            Pink: './MegaAssets/Pink/',
+            Orange: './MegaAssets/Orange/',
+            Grey: './MegaAssets/Grey/',
+            Beige: './MegaAssets/Beige/',
+            Lime: './MegaAssets/Lime/'
+        }
+        
+        // This allows upside down components to match the path of the regular components
+        const matchingColor = {
+            'ua1': 'a1',
+            'ua2': 'a2',
+            'ua3': 'a3',
+            'ua4': 'a4',
+            'ua5': 'a5',
+            'ua6': 'a6',
+            'ua7': 'a7',
+            'ua8': 'a8',
+            'ua9': 'a9',
+            'ua0': 'a0',
+        }
+
+        // This tells us whether a face is Upward or Downward rotation
+        const checkDirection = {
+            'Green': 'Upward',
+            'Purple': 'Upward',
+            'Yellow': 'Upward',
+            'Blue': 'Upward',
+            'Red': 'Upward',
+            'Grey': 'Upward',
+            'White': 'Downward',
+            'Orange': 'Downward',
+            'Cyan': 'Downward',
+            'Beige': 'Downward',
+            'Pink': 'Downward',
+            'Lime': 'Downward'
+        }
+        
+        // Changes the color of the component on a face
+        function changeComponentColor(colorFace, index, newColor) {
+            // Grabs the div (face) by it's Id (color)
+            const divTarget = document.getElementById(colorFace);
+
+            var targetComponentName;
+            var targetComponent;
+
+            // Grabs the component we're modifying
+            if (checkDirection[colorFace] == 'Upward'){
+                //Grab name of component
+                targetComponentName = 'a' + index;
+                
+                // Select component and update source path
+                targetComponent = divTarget.querySelector(`.${targetComponentName}`);
+                targetComponent.src = componentList[newColor]+targetComponentName+'.png';
+            }
+            else {
+                // Grab name of component
+                targetComponentName = 'ua' + index;
+
+                // Select component and update source path
+                targetComponent = divTarget.querySelector(`.${targetComponentName}`);
+                targetComponent.src = componentList[newColor]+matchingColor[targetComponentName]+'.png';
+            }
+
+        }
+
+        /*
+        componentsList = {
+            'Version' : 1,
+            'Colors' : {
+                'Red' : {
+                    '0' : 'Red',
+                    '1' : 'Red',
+                    '2' : 'Red',
+                    '3' : 'Red',
+                    '4' : 'Red',
+                    '5' : 'Red',
+                    '6' : 'Red',
+                    '7' : 'Red',
+                    '8' : 'Red',
+                    '9' : 'Red',
+                },
+                'Green' : {
+                    '0' : 'Green',
+                    '1' : 'Green',
+                    '2' : 'Green',
+                    '3' : 'Green',
+                    '4' : 'Green',
+                    '5' : 'Green',
+                    '6' : 'Green',
+                    '7' : 'Green',
+                    '8' : 'Green',
+                    '9' : 'Green',
+                },
+            }
+        }
+        */
+
+        // Our version control
+        var currentVersion = -1;
+
+        // Grabs our components.json and uploads to the css/html
+        function fetchData() {
+            // Grabs the components.json file and unpacks and parses the data
+            fetch('./components.json')
+            .then(response => response.json())
+            .then(data => {
+                // Check if the index is different
+                if (data['Version'] != currentVersion){
+                    // Update the current version
+                    currentVersion = data['Version'];
+                    console.log('Version: ' + data['Version']);
+                
+                    // Grab the Colors Dictionary
+                    colorList = data['Colors']
+
+                    //  Loop through the Colors to each Face Dictionary
+                    for (const face in colorList){
+                        // Loop through each component of the Face Dictionary
+                        for (const component in colorList[face]){
+                            // console.log('Face: '+face, ' Component: ' + component, ' New Color: ' +colorList[face][component])
+                            changeComponentColor(face, component, colorList[face][component]);
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Tells the server to start loading the components.json
+        function startFetching() {
+            setInterval(() => {
+                console.log('Grabbing Dump');
+                fetchData();
+                // Fetch for other faces...
+            }, 500);  // Fetch every second
+        }
+    </script>
+    <style>
+        .Back, .Middle {
+            width: 200px;
+            height: 200px;
+            left: 0px;
+            top: 0px;
+            position: absolute;
+        }
+        .uBack, .uMiddle {
+            width: 200px;
+            height: 200px;
+            left: 0px;
+            top: 0px;
+            position: absolute;
+            transform: rotate(180deg)
+        }
+        .a0, .a1, .a2, .a3, .a4, .a5, .a6, .a7, .a8, .a9 {
+            width: 200px; 
+            height: 200px; 
+            left: 0px; 
+            top: 0px; 
+            position: absolute
+        }
+        .ua0, .ua1, .ua2, .ua3, .ua4, .ua5, .ua6, .ua7, .ua8, .ua9 {
+            width: 200px;
+            height: 200px;
+            left: 0px;
+            top: 0px;
+            position: absolute;
+            transform: rotate(180deg)
+        }
+    </style>
+</head>
+<body onload="startFetching()">
+    <div style="width: 100%; height: 100%; position: relative">
+        <div id="Green" style="width: 200px; height: 200px; left: 168px; top: 11px; position: absolute">
+            <img class="Back" src="./MegaAssets/Back.png" />
+            <img class="Middle" src="./MegaAssets/Green/Middle.png" />
+            <img class="a0" src="./MegaAssets/Green/a0.png" />
+            <img class="a1" src="./MegaAssets/Green/a1.png" />
+            <img class="a2" src="./MegaAssets/Green/a2.png" />
+            <img class="a3" src="./MegaAssets/Green/a3.png" />
+            <img class="a4" src="./MegaAssets/Green/a4.png" />
+            <img class="a5" src="./MegaAssets/Green/a5.png" />
+            <img class="a6" src="./MegaAssets/Green/a6.png" />
+            <img class="a7" src="./MegaAssets/Green/a7.png" />
+            <img class="a8" src="./MegaAssets/Green/a8.png" />
+            <img class="a9" src="./MegaAssets/Green/a9.png" />
+        </div>
+        <div id="Red" style="width: 200px; height: 200px; left: 0px; top: 132px; position: absolute">
+            <img class="Back" src="./MegaAssets/Back.png" />
+            <img class="Middle" src="./MegaAssets/Red/Middle.png" />
+            <img class="a0" src="./MegaAssets/Red/a0.png" />
+            <img class="a1" src="./MegaAssets/Red/a1.png" />
+            <img class="a2" src="./MegaAssets/Red/a2.png" />
+            <img class="a3" src="./MegaAssets/Red/a3.png" />
+            <img class="a4" src="./MegaAssets/Red/a4.png" />
+            <img class="a5" src="./MegaAssets/Red/a5.png" />
+            <img class="a6" src="./MegaAssets/Red/a6.png" />
+            <img class="a7" src="./MegaAssets/Red/a7.png" />
+            <img class="a8" src="./MegaAssets/Red/a8.png" />
+            <img class="a9" src="./MegaAssets/Red/a9.png" />
+        </div>
+        <div id="Blue" style="width: 200px; height: 200px; left: 57px; top: 326px; position: absolute">
+            <img class="Back" src="./MegaAssets/Back.png" />
+            <img class="Middle" src="./MegaAssets/Blue/Middle.png" />
+            <img class="a0" src="./MegaAssets/Blue/a0.png" />
+            <img class="a1" src="./MegaAssets/Blue/a1.png" />
+            <img class="a2" src="./MegaAssets/Blue/a2.png" />
+            <img class="a3" src="./MegaAssets/Blue/a3.png" />
+            <img class="a4" src="./MegaAssets/Blue/a4.png" />
+            <img class="a5" src="./MegaAssets/Blue/a5.png" />
+            <img class="a6" src="./MegaAssets/Blue/a6.png" />
+            <img class="a7" src="./MegaAssets/Blue/a7.png" />
+            <img class="a8" src="./MegaAssets/Blue/a8.png" />
+            <img class="a9" src="./MegaAssets/Blue/a9.png" />
+        </div>
+        <div id="Yellow" style="width: 200px; height: 200px; left: 280px; top: 326px; position: absolute">
+            <img class="Back" src="./MegaAssets/Back.png" />
+            <img class="Middle" src="./MegaAssets/Yellow/Middle.png" />
+            <img class="a0" src="./MegaAssets/Yellow/a0.png" />
+            <img class="a1" src="./MegaAssets/Yellow/a1.png" />
+            <img class="a2" src="./MegaAssets/Yellow/a2.png" />
+            <img class="a3" src="./MegaAssets/Yellow/a3.png" />
+            <img class="a4" src="./MegaAssets/Yellow/a4.png" />
+            <img class="a5" src="./MegaAssets/Yellow/a5.png" />
+            <img class="a6" src="./MegaAssets/Yellow/a6.png" />
+            <img class="a7" src="./MegaAssets/Yellow/a7.png" />
+            <img class="a8" src="./MegaAssets/Yellow/a8.png" />
+            <img class="a9" src="./MegaAssets/Yellow/a9.png" />
+        </div>
+        <div id="Purple" style="width: 200px; height: 200px; left: 337px; top: 126px; position: absolute">
+            <img class="Back" src="./MegaAssets/Back.png" />
+            <img class="Middle" src="./MegaAssets/Purple/Middle.png" />
+            <img class="a0" src="./MegaAssets/Purple/a0.png" />
+            <img class="a1" src="./MegaAssets/Purple/a1.png" />
+            <img class="a2" src="./MegaAssets/Purple/a2.png" />
+            <img class="a3" src="./MegaAssets/Purple/a3.png" />
+            <img class="a4" src="./MegaAssets/Purple/a4.png" />
+            <img class="a5" src="./MegaAssets/Purple/a5.png" />
+            <img class="a6" src="./MegaAssets/Purple/a6.png" />
+            <img class="a7" src="./MegaAssets/Purple/a7.png" />
+            <img class="a8" src="./MegaAssets/Purple/a8.png" />
+            <img class="a9" src="./MegaAssets/Purple/a9.png" />
+        </div>
+        <div id="Grey" style="width: 200px; height: 200px; left: 685px; top: 126px; position: absolute">
+            <img class="Back" src="./MegaAssets/Back.png" />
+            <img class="Middle" src="./MegaAssets/Grey/Middle.png" />
+            <img class="a0" src="./MegaAssets/Grey/a0.png" />
+            <img class="a1" src="./MegaAssets/Grey/a1.png" />
+            <img class="a2" src="./MegaAssets/Grey/a2.png" />
+            <img class="a3" src="./MegaAssets/Grey/a3.png" />
+            <img class="a4" src="./MegaAssets/Grey/a4.png" />
+            <img class="a5" src="./MegaAssets/Grey/a5.png" />
+            <img class="a6" src="./MegaAssets/Grey/a6.png" />
+            <img class="a7" src="./MegaAssets/Grey/a7.png" />
+            <img class="a8" src="./MegaAssets/Grey/a8.png" />
+            <img class="a9" src="./MegaAssets/Grey/a9.png" />
+        </div>
+        <div id="White" style="width: 200px; height: 200px; left: 168px; top: 205px; position: absolute">
+            <img class="uBack" src="./MegaAssets/Back.png" />
+            <img class="uMiddle" src="./MegaAssets/White/Middle.png" />
+            <img class="ua0" src="./MegaAssets/White/a0.png" />
+            <img class="ua1" src="./MegaAssets/White/a1.png" />
+            <img class="ua2" src="./MegaAssets/White/a2.png" />
+            <img class="ua3" src="./MegaAssets/White/a3.png" />
+            <img class="ua4" src="./MegaAssets/White/a4.png" />
+            <img class="ua5" src="./MegaAssets/White/a5.png" />
+            <img class="ua6" src="./MegaAssets/White/a6.png" />
+            <img class="ua7" src="./MegaAssets/White/a7.png" />
+            <img class="ua8" src="./MegaAssets/White/a8.png" />
+            <img class="ua9" src="./MegaAssets/White/a9.png" />
+        </div>
+        <div id="Orange" style="width: 200px; height: 200px; left: 509px; top: 200px; position: absolute">
+            <img class="uBack" src="./MegaAssets/Back.png" />
+            <img class="uMiddle" src="./MegaAssets/Orange/Middle.png" />
+            <img class="ua0" src="./MegaAssets/Orange/a0.png" />
+            <img class="ua1" src="./MegaAssets/Orange/a1.png" />
+            <img class="ua2" src="./MegaAssets/Orange/a2.png" />
+            <img class="ua3" src="./MegaAssets/Orange/a3.png" />
+            <img class="ua4" src="./MegaAssets/Orange/a4.png" />
+            <img class="ua5" src="./MegaAssets/Orange/a5.png" />
+            <img class="ua6" src="./MegaAssets/Orange/a6.png" />
+            <img class="ua7" src="./MegaAssets/Orange/a7.png" />
+            <img class="ua8" src="./MegaAssets/Orange/a8.png" />
+            <img class="ua9" src="./MegaAssets/Orange/a9.png" />
+        </div>
+        <div id="Lime" style="width: 200px; height: 200px; left: 685px; top: 326px; position: absolute">
+            <img class="uBack" src="./MegaAssets/Back.png" />
+            <img class="uMiddle" src="./MegaAssets/Lime/Middle.png" />
+            <img class="ua0" src="./MegaAssets/Lime/a0.png" />
+            <img class="ua1" src="./MegaAssets/Lime/a1.png" />
+            <img class="ua2" src="./MegaAssets/Lime/a2.png" />
+            <img class="ua3" src="./MegaAssets/Lime/a3.png" />
+            <img class="ua4" src="./MegaAssets/Lime/a4.png" />
+            <img class="ua5" src="./MegaAssets/Lime/a5.png" />
+            <img class="ua6" src="./MegaAssets/Lime/a6.png" />
+            <img class="ua7" src="./MegaAssets/Lime/a7.png" />
+            <img class="ua8" src="./MegaAssets/Lime/a8.png" />
+            <img class="ua9" src="./MegaAssets/Lime/a9.png" />
+        </div>
+        <div id="Cyan" style="width: 200px; height: 200px; left: 574px; top: 0px; position: absolute">
+            <img class="uBack" src="./MegaAssets/Back.png" />
+            <img class="uMiddle" src="./MegaAssets/Cyan/Middle.png" />
+            <img class="ua0" src="./MegaAssets/Cyan/a0.png" />
+            <img class="ua1" src="./MegaAssets/Cyan/a1.png" />
+            <img class="ua2" src="./MegaAssets/Cyan/a2.png" />
+            <img class="ua3" src="./MegaAssets/Cyan/a3.png" />
+            <img class="ua4" src="./MegaAssets/Cyan/a4.png" />
+            <img class="ua5" src="./MegaAssets/Cyan/a5.png" />
+            <img class="ua6" src="./MegaAssets/Cyan/a6.png" />
+            <img class="ua7" src="./MegaAssets/Cyan/a7.png" />
+            <img class="ua8" src="./MegaAssets/Cyan/a8.png" />
+            <img class="ua9" src="./MegaAssets/Cyan/a9.png" />
+        </div>
+        <div id="Beige" style="width: 200px; height: 200px; left: 799px; top: 5px; position: absolute">
+            <img class="uBack" src="./MegaAssets/Back.png" />
+            <img class="uMiddle" src="./MegaAssets/Beige/Middle.png" />
+            <img class="ua0" src="./MegaAssets/Beige/a0.png" />
+            <img class="ua1" src="./MegaAssets/Beige/a1.png" />
+            <img class="ua2" src="./MegaAssets/Beige/a2.png" />
+            <img class="ua3" src="./MegaAssets/Beige/a3.png" />
+            <img class="ua4" src="./MegaAssets/Beige/a4.png" />
+            <img class="ua5" src="./MegaAssets/Beige/a5.png" />
+            <img class="ua6" src="./MegaAssets/Beige/a6.png" />
+            <img class="ua7" src="./MegaAssets/Beige/a7.png" />
+            <img class="ua8" src="./MegaAssets/Beige/a8.png" />
+            <img class="ua9" src="./MegaAssets/Beige/a9.png" />
+        </div>
+        <div id="Pink" style="width: 200px; height: 200px; left: 857px; top: 200px; position: absolute">
+            <img class="uBack" src="./MegaAssets/Back.png" />
+            <img class="uMiddle" src="./MegaAssets/Pink/Middle.png" />
+            <img class="ua0" src="./MegaAssets/Pink/a0.png" />
+            <img class="ua1" src="./MegaAssets/Pink/a1.png" />
+            <img class="ua2" src="./MegaAssets/Pink/a2.png" />
+            <img class="ua3" src="./MegaAssets/Pink/a3.png" />
+            <img class="ua4" src="./MegaAssets/Pink/a4.png" />
+            <img class="ua5" src="./MegaAssets/Pink/a5.png" />
+            <img class="ua6" src="./MegaAssets/Pink/a6.png" />
+            <img class="ua7" src="./MegaAssets/Pink/a7.png" />
+            <img class="ua8" src="./MegaAssets/Pink/a8.png" />
+            <img class="ua9" src="./MegaAssets/Pink/a9.png" />
+        </div>
+    </div>
+</body>
+
+
