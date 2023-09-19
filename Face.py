@@ -1,6 +1,5 @@
 
 # You will need this to pack the information into the components.json file
-import json, time
 import megaMap as mp
 
 # The printing characterization
