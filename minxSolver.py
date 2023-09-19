@@ -110,8 +110,13 @@ def main():
 
     # Begin printing our minx
     for i in reversed(solutionPathMinx):
+        # Sleep for more added effect
         time.sleep(3)
+        
+        # Print the solution
         print(f'Clockwise Rotating: {i.color}')
+
+        # Update our HTML
         versionControl += 1
         i.printMinx(versionControl)
 
