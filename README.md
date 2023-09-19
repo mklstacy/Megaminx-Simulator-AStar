@@ -1,2 +1,3 @@
-# Megaminx
- Using A* to solve a randomized megaminx
+# Megaminx Project
+Solving a randomized Megaminx using the A* Algorithm
+ 
