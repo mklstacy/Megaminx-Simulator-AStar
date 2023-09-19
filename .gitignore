@@ -1,2 +1,4 @@
 __pycache__/
 MegaControl/
+.DS_Store/
+bfs.py
