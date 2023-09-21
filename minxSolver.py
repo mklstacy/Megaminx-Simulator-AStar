@@ -79,7 +79,7 @@ def main():
     root.printMinx(versionControl)
 
     # Sleep for added effect
-    time.sleep(2)
+    time.sleep(1)
 
     # Update the heuristic
     root.calculateHeuristic()
@@ -111,7 +111,7 @@ def main():
     # Begin printing our minx
     for i in reversed(solutionPathMinx):
         # Sleep for more added effect
-        time.sleep(3)
+        time.sleep(2)
         
         # Print the solution
         print(f'Clockwise Rotating: {i.color}')

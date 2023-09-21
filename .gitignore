@@ -3,3 +3,4 @@ MegaControl/
 .DS_Store
 bfs.py
 components.json
+*.json
