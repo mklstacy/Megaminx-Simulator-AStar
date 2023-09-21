@@ -4,3 +4,5 @@ MegaControl/
 bfs.py
 components.json
 *.json
+*.docx
+*.pdf
